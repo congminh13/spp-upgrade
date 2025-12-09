@@ -10,21 +10,21 @@ st.set_page_config(
 )
 menu()
 
-st.title('Triển khai mô hình RNN (LSTM) cho dự đoán giá cổ phiếu')
+st.title('Implementing RNN (LSTM) Model for Stock Price Prediction')
 
 st.markdown(
     """
-    Mô hình Mạng thần kinh hồi quy (RNN), cụ thể là LSTM, được sử dụng để dự đoán giá cổ phiếu dựa trên dữ liệu giá đóng cửa, tận dụng khả năng ghi nhớ các mẫu thời gian dài hạn.
+    Recurrent Neural Network (RNN) models, specifically LSTM, are used to predict stock prices based on closing price data, leveraging the ability to remember long-term temporal patterns.
     """
 )
 
-st.subheader("Mạng Thần Kinh Hồi Quy (RNN)")
+st.subheader("Recurrent Neural Network (RNN)")
 st.markdown(
     """
-    **Định nghĩa**: RNN là một loại mạng thần kinh nhân tạo được thiết kế cho dữ liệu tuần tự, nơi đầu ra của một bước thời gian được sử dụng làm đầu vào cho bước tiếp theo. Điều này cho phép RNN lưu giữ "bộ nhớ" về các dữ liệu trước đó thông qua trạng thái ẩn.
+    **Definition**: RNN is a type of artificial neural network designed for sequential data, where the output of one time step is used as input for the next. This allows RNNs to retain "memory" of previous data through hidden states.
 
-    **Cách hoạt động**:
-    - Tại mỗi bước thời gian t, RNN xử lý đầu vào x[t] và trạng thái ẩn trước đó h[t-1] để tạo ra trạng thái ẩn mới h[t]:
+    **How it works**:
+    - At each time step t, RNN processes input x[t] and the previous hidden state h[t-1] to generate a new hidden state h[t]:
     """
 )
 
@@ -32,55 +32,55 @@ st.latex(r"h_t = \text{activation}(W_{xh}x[t] + W_{hh}h[t-1] + b_h)")
 
 st.markdown(
     """
-      với W_{xh}, W_{hh} là các ma trận trọng số, b_h là bias, và hàm kích hoạt thường là `tanh` hoặc `sigmoid`.
-    - Đầu ra có thể được tính từ h_t để dự đoán.
-    - RNN được huấn luyện bằng lan truyền ngược qua thời gian (BPTT), nhưng gặp vấn đề về gradient biến mất hoặc bùng nổ, hạn chế khả năng học các phụ thuộc dài hạn.
+      where W_{xh}, W_{hh} are weight matrices, b_h is bias, and the activation function is typically `tanh` or `sigmoid`.
+    - The output can be calculated from h_t for prediction.
+    - RNNs are trained using Backpropagation Through Time (BPTT), but suffer from vanishing or exploding gradient problems, limiting their ability to learn long-term dependencies.
 
-    **Hạn chế**: Do vấn đề gradient, RNN không hiệu quả với các chuỗi dài, như dữ liệu giá cổ phiếu trong nhiều tháng.
+    **Limitations**: Due to gradient problems, RNNs are ineffective with long sequences, such as stock price data over many months.
     """
 )
 
 st.subheader("Long Short-Term Memory (LSTM)")
 st.markdown(
     """
-    **Định nghĩa**: LSTM là một biến thể cải tiến của RNN, được thiết kế để học các phụ thuộc dài hạn. Nó sử dụng ô nhớ (memory cell) và ba cổng (gates) để kiểm soát dòng thông tin.
+    **Definition**: LSTM is an improved variant of RNN, designed to learn long-term dependencies. It uses a memory cell and three gates to control the flow of information.
 
-    **Cách hoạt động**:
-    - **Ô nhớ (Cell State)**: Lưu giữ thông tin qua các bước thời gian, cho phép ghi nhớ dài hạn.
-    - **Cổng quên (Forget Gate)**: Quyết định thông tin nào cần loại bỏ:
+    **How it works**:
+    - **Cell State**: Retains information across time steps, enabling long-term memory.
+    - **Forget Gate**: Decides what information to discard:
     """
 )
 
 st.latex(r"f_t = \sigma(W_f \cdot [h[t-1], x[t]] + b_f)")
 
-st.markdown("- **Cổng vào (Input Gate)**: Quyết định thông tin mới được thêm vào:")
+st.markdown("- **Input Gate**: Decides what new information to add:")
 
 st.latex(r"i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i), \quad \tilde{C}_t = \tanh(W_C \cdot [h_{t-1}, x_t] + b_C)")
 
-st.markdown("- **Cập nhật ô nhớ**:")
+st.markdown("- **Update Cell State**:")
 
 st.latex(r"C_t = f_t \cdot C_{t-1} + i_t \cdot \tilde{C}_t")
 
-st.markdown("- **Cổng ra (Output Gate)**: Tạo đầu ra và cập nhật trạng thái ẩn:")
+st.markdown("- **Output Gate**: Generates output and updates the hidden state:")
 
 st.latex(r"o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o), \quad h_t = o_t \cdot \tanh(C_t)")
 
 st.markdown(
     """
-    - Các cổng này cho phép LSTM chọn lọc thông tin quan trọng, tránh vấn đề gradient biến mất.
+    - These gates allow LSTM to selectively retain important information, avoiding the vanishing gradient problem.
 
-    **Ưu điểm**: LSTM có thể học các mẫu phức tạp và phụ thuộc dài hạn, rất phù hợp cho dữ liệu giá cổ phiếu.
+    **Advantages**: LSTM can learn complex patterns and long-term dependencies, making it well-suited for stock price data.
     """
 )
 
-st.subheader("Tại sao LSTM phù hợp để dự đoán giá cổ phiếu")
+st.subheader("Why LSTM is Suitable for Stock Price Prediction")
 st.markdown(
     """
-    - **Phụ thuộc thời gian**: Giá cổ phiếu là dữ liệu chuỗi thời gian, nơi giá trị quá khứ ảnh hưởng đến tương lai. LSTM ghi nhớ các mẫu như xu hướng tăng/giảm qua nhiều ngày hoặc tháng.
-    - **Mô hình hóa phi tuyến**: Giá cổ phiếu bị ảnh hưởng bởi các yếu tố phi tuyến (ví dụ: tâm lý thị trường, sự kiện kinh tế). LSTM có khả năng học các mối quan hệ phức tạp này.
-    - **Bộ nhớ dài hạn**: LSTM có thể ghi nhớ các sự kiện quan trọng từ quá khứ (ví dụ: biến động lớn cách đây vài tháng), giúp dự đoán chính xác hơn.
-    - **Xử lý nhiễu**: Dữ liệu giá cổ phiếu có nhiều nhiễu. Các cổng của LSTM giúp tập trung vào các mẫu quan trọng, bỏ qua nhiễu.
-    - **Khả năng tuần tự**: LSTM xử lý dữ liệu theo chuỗi (ví dụ: 60 ngày giá đóng cửa), cho phép học cách các giá trị trước ảnh hưởng đến giá trị sau.
+    - **Time Dependence**: Stock prices are time-series data where past values influence the future. LSTM remembers patterns like upward/downward trends over days or months.
+    - **Non-linear Modeling**: Stock prices are affected by non-linear factors (e.g., market sentiment, economic events). LSTM is capable of learning these complex relationships.
+    - **Long-term Memory**: LSTM can remember significant past events (e.g., major fluctuations months ago), leading to more accurate predictions.
+    - **Noise Handling**: Stock price data is noisy. LSTM gates help focus on important patterns while ignoring noise.
+    - **Sequential Capability**: LSTM processes data in sequences (e.g., 60 days of closing prices), allowing it to learn how previous values affect subsequent ones.
     """
 )
 
@@ -96,11 +96,11 @@ st.markdown(
 #     """.format(train_ratio=0.7)
 # )
 
-st.write("Các mã cổ phiếu phổ biến:")
+st.write("Popular Stock Symbols:")
 st.markdown("""AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA, META, JPM, V, KO, PEP, DIS, NFLX, INTC""")
-stock_symbol = st.text_input("Nhập mã cổ phiếu", "AAPL")
-period = st.selectbox("Chọn khoảng thời gian", ["3mo", "6mo", "1y", "2y", "5y"])
-train_ratio = st.slider("Chọn tỷ lệ huấn luyện", min_value=0.5, max_value=0.9, value=0.7, step=0.05)
+stock_symbol = st.text_input("Enter Stock Symbol", "AAPL")
+period = st.selectbox("Select Period", ["3mo", "6mo", "1y", "2y", "5y"])
+train_ratio = st.slider("Select Training Ratio", min_value=0.5, max_value=0.9, value=0.7, step=0.05)
 
 ksppm = KSPPM(stock_symbol, period, train_ratio)
 ksppm.fetch_data()
