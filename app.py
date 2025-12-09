@@ -17,7 +17,6 @@ if __name__ == '__main__':
 
     st.title(f'{Config.APP_NAME}')
     st.write('Version:‎ ‎ ‎ ‎', Config.APP_VERSION)
-    st.markdown('Trần Công Minh  -  CSI10')
 
     st.divider()
   
