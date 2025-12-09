@@ -12,15 +12,15 @@ st.set_page_config(
 )
 menu()
 
-st.title('Đánh giá & Kết luận')
+st.title('Evaluation & Conclusion')
 
-st.subheader('***So sánh các mô hình:***')
+st.subheader('***Model Comparison:***')
 
-st.write("Các mã cổ phiếu phổ biến:")
+st.write("Popular Stock Symbols:")
 st.markdown("""AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA, META, JPM, V, KO, PEP, DIS, NFLX, INTC""")
-stock_symbol = st.text_input("Nhập mã cổ phiếu", "AAPL")
-period = st.selectbox("Chọn khoảng thời gian", ["3mo", "6mo", "1y", "2y", "5y"])
-train_ratio = st.slider("Chọn tỷ lệ huấn luyện", min_value=0.5, max_value=0.9, value=0.7, step=0.05)
+stock_symbol = st.text_input("Enter Stock Symbol", "AAPL")
+period = st.selectbox("Select Period", ["3mo", "6mo", "1y", "2y", "5y"])
+train_ratio = st.slider("Select Training Ratio", min_value=0.5, max_value=0.9, value=0.7, step=0.05)
 
 # st.subheader("Dự đoán tương lai (Keras Model)")
 # start_date = st.date_input("Chọn ngày bắt đầu", value=datetime(2025, 5, 23))
@@ -32,24 +32,24 @@ train_ratio = st.slider("Chọn tỷ lệ huấn luyện", min_value=0.5, max_va
 # else:
 cg = CG(stock_symbol, period, train_ratio)
 cg.visualize()
-st.subheader('***Đánh giá:***')
+st.subheader('***Evaluation:***')
 st.markdown(
     """
-    1. Từ việc so sánh giữa ba mô hình (hồi quy tuyến tính cơ bản, hồi quy tuyến tính cải tiến, và mô hình Keras LSTM), ta thấy mô hình Keras có khả năng nắm bắt xu hướng thời gian tốt hơn nhờ sử dụng cấu trúc LSTM.
-    2. Mô hình cải tiến và Keras đều có độ chính xác cao hơn mô hình cơ bản, với mô hình Keras thường có sai số thấp hơn trong các trường hợp phức tạp.
-    3. Việc sử dụng các chỉ số kỹ thuật (RSI, MACD) và dữ liệu thời gian đã cải thiện đáng kể hiệu suất của cả mô hình hồi quy tuyến tính cải tiến và mô hình Keras.
-    4. Mô hình Keras có thể dự đoán giá cổ phiếu trong tương lai với độ linh hoạt cao hơn nhờ khả năng học các mẫu phi tuyến.
+    1. Comparing the three models (basic linear regression, improved linear regression, and Keras LSTM), we see that the Keras model captures time trends better due to its LSTM structure.
+    2. Both the improved model and Keras model have higher accuracy than the basic model, with Keras often having lower error in complex cases.
+    3. The use of technical indicators (RSI, MACD) and temporal data significantly improved the performance of both the improved linear regression and Keras models.
+    4. The Keras model can predict future stock prices with greater flexibility due to its ability to learn non-linear patterns.
     """
 )
 
-st.subheader('***Kết luận:***')
+st.subheader('***Conclusion:***')
 st.markdown(
     """
-    ***Việc sử dụng mô hình hồi quy tuyến tính (Linear Regression) là khả thi khi kết hợp với các chỉ số kỹ thuật, nhưng mô hình Keras LSTM mang lại khả năng dự đoán mạnh mẽ hơn trong các tình huống phức tạp. Sự kết hợp giữa dữ liệu kỹ thuật và mô hình học sâu là chìa khóa để cải thiện độ chính xác dự đoán giá cổ phiếu.***
+    ***Using Linear Regression is feasible when combined with technical indicators, but the Keras LSTM model provides more robust prediction capabilities in complex situations. The combination of technical data and deep learning models is key to improving stock price prediction accuracy.***
     """
 )
 st.markdown(
     """
-    ***Lưu ý:*** Mô hình Keras vẫn có thể được tối ưu hóa thêm bằng cách điều chỉnh kiến trúc mạng, thêm các đặc trưng mới, hoặc sử dụng các kỹ thuật như cross-validation.
+    ***Note:*** The Keras model can be further optimized by adjusting the network architecture, adding new features, or using techniques like cross-validation.
     """
 )

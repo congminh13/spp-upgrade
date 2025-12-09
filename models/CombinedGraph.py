@@ -94,23 +94,23 @@ class CombinedGraph:
         improved_metrics = self.improved_module.evaluate()
         keras_metrics = self.keras_module.evaluate()
 
-        st.write("### So sánh hiệu suất mô hình")
-        st.write("**Chỉ số mô hình cơ bản (Basic Linear Regression):**")
+        st.write("### Model Performance Comparison")
+        st.write("**Basic Linear Regression Metrics:**")
         st.write(f"- Mean Squared Error (MSE): {basic_metrics['MSE']:.2f}")
         st.write(f"- Mean Absolute Error (MAE): {basic_metrics['MAE']:.2f}")
         st.write(f"- R-squared (R²): {basic_metrics['R2']:.2f}")
-        st.write("**Chỉ số mô hình cải tiến (Improved Linear Regression):**")
+        st.write("**Improved Linear Regression Metrics:**")
         st.write(f"- Mean Squared Error (MSE): {improved_metrics['MSE']:.2f}")
         st.write(f"- Mean Absolute Error (MAE): {improved_metrics['MAE']:.2f}")
         st.write(f"- R-squared (R²): {improved_metrics['R2']:.2f}")
-        st.write("**Chỉ số mô hình Keras (LSTM):**")
+        st.write("**Keras LSTM Metrics:**")
         st.write(f"- Mean Squared Error (MSE): {keras_metrics['MSE']:.2f}")
         st.write(f"- Mean Absolute Error (MAE): {keras_metrics['MAE']:.2f}")
         st.write(f"- R-squared (R²): {keras_metrics['R2']:.2f}")
 
         # # Future predictions with Keras model
         # if self.start_date and self.end_date:
-        #     st.subheader("Dự đoán giá cổ phiếu trong tương lai (Keras Model)")
+        #     st.subheader("Future Stock Price Prediction (Keras Model)")
         #     future_pred = self.keras_module.predict_future(self.start_date, self.end_date)
         #     if future_pred is not None:
         #         st.dataframe(future_pred)

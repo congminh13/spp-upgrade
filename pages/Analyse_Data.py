@@ -12,20 +12,20 @@ st.set_page_config(
 )
 menu()
 
-st.title('Phân tích dữ liệu giá cổ phiếu cho mô hình RNN (LSTM)')
+st.title('Stock Price Data Analysis for RNN (LSTM) Model')
 
-st.write("Các mã cổ phiếu phổ biến:")
+st.write("Popular Stock Symbols:")
 st.markdown("""AAPL, MSFT, GOOGL, AMZN, TSLA, NVDA, META, JPM, V, KO, PEP, DIS, NFLX, INTC""")
-stock_symbol = st.text_input("Nhập mã cổ phiếu", "AAPL")
-period = st.selectbox("Chọn khoảng thời gian", ["3mo", "6mo", "1y", "2y", "5y"])
-train_ratio = st.slider("Chọn tỷ lệ huấn luyện", min_value=0.5, max_value=0.9, value=0.7, step=0.05)
+stock_symbol = st.text_input("Enter Stock Symbol", "AAPL")
+period = st.selectbox("Select Period", ["3mo", "6mo", "1y", "2y", "5y"])
+train_ratio = st.slider("Select Training Ratio", min_value=0.5, max_value=0.9, value=0.7, step=0.05)
 
 ksppm = KSPPM(stock_symbol, period, train_ratio)
 raw_data = ksppm.fetch_data()
 
 if raw_data is not None:
-    with st.expander("Dữ liệu giá cổ phiếu gốc"):
-        st.write("**Dữ liệu gốc (Raw Data):**")
+    with st.expander("Raw Stock Price Data"):
+        st.write("**Raw Data:**")
         st.dataframe(raw_data)
 
     raw_data['RSI'] = ksppm.calculate_rsi(raw_data)
@@ -36,16 +36,16 @@ if raw_data is not None:
     raw_data['Signal Line'] = raw_data['Signal Line'].fillna(method='ffill').fillna(method='bfill')
     raw_data.dropna(inplace=True)
 
-    with st.expander("Dữ liệu sau khi xử lý và thêm các chỉ số kỹ thuật"):
-        st.write("**Dữ liệu đã xử lý (bao gồm RSI và MACD):**")
+    with st.expander("Processed Data with Technical Indicators"):
+        st.write("**Processed Data (including RSI and MACD):**")
         st.dataframe(raw_data[['Close', 'RSI', 'MACD', 'Signal Line']])
 
-    st.subheader("Chỉ báo kỹ thuật cho mô hình LSTM")
+    st.subheader("Technical Indicators for LSTM Model")
 
     st.markdown("### RSI (Relative Strength Index)")
-    st.markdown("RSI đo lường sức mạnh tương đối của giá cổ phiếu, giúp xác định các vùng quá mua hoặc quá bán, cung cấp đặc trưng quan trọng cho LSTM.")
+    st.markdown("RSI measures the relative strength of stock prices, helping to identify overbought or oversold zones, providing important features for LSTM.")
     st.latex(r"""
-    \text{RSI} = 100 - \frac{100}{1 + RS}, \quad \text{với } RS = \frac{\text{Tăng trung bình}}{\text{Giảm trung bình}}
+    \text{RSI} = 100 - \frac{100}{1 + RS}, \quad \text{where } RS = \frac{\text{Average Gain}}{\text{Average Loss}}
     """)
     st.code(
         """
@@ -65,9 +65,9 @@ if raw_data is not None:
     )
 
     st.markdown("### MACD (Moving Average Convergence Divergence)")
-    st.markdown("MACD phân tích xu hướng giá thông qua mối quan hệ giữa hai đường trung bình động, hỗ trợ LSTM dự đoán biến động giá.")
+    st.markdown("MACD analyzes price trends through the relationship between two moving averages, supporting LSTM in predicting price fluctuations.")
     st.latex(r"""
-    \text{MACD} = \text{EMA}_{\text{ngắn hạn}} - \text{EMA}_{\text{dài hạn}}, \quad \text{Đường tín hiệu} = \text{EMA}_{\text{kỳ tín hiệu}}(\text{MACD})
+    \text{MACD} = \text{EMA}_{\text{short-term}} - \text{EMA}_{\text{long-term}}, \quad \text{Signal Line} = \text{EMA}_{\text{signal period}}(\text{MACD})
     """)
     st.code(
         """
@@ -82,15 +82,15 @@ if raw_data is not None:
         language="python"
     )
 
-    st.subheader("Phân tích dữ liệu cho RNN (LSTM)")
+    st.subheader("Data Analysis for RNN (LSTM)")
     st.markdown(
         """
-        - **Dữ liệu giá đóng cửa**: Phản ánh xu hướng giá cổ phiếu, là mục tiêu chính để LSTM dự đoán.
-        - **RSI**: Cung cấp thông tin về động lượng giá, giúp LSTM phát hiện các mẫu biến động ngắn hạn.
-        - **MACD**: Bổ sung thông tin về xu hướng dài hạn và điểm đảo chiều, tăng khả năng dự đoán của LSTM.
-        - **Tiền xử lý**: Dữ liệu được chuẩn hóa và chia thành tập huấn luyện/kiểm tra (tỷ lệ {train_ratio:.2f}), sẵn sàng cho mô hình LSTM.
-        - **Kết luận**: Dữ liệu đã được làm giàu với RSI và MACD, phù hợp để huấn luyện mô hình LSTM nhằm dự đoán giá cổ phiếu chính xác hơn.
+        - **Close Price Data**: Reflects stock price trends, which is the main target for LSTM prediction.
+        - **RSI**: Provides information on price momentum, helping LSTM detect short-term volatility patterns.
+        - **MACD**: Adds information on long-term trends and reversal points, increasing LSTM's predictive capability.
+        - **Preprocessing**: Data is normalized and split into training/testing sets (ratio {train_ratio:.2f}), ready for the LSTM model.
+        - **Conclusion**: Data has been enriched with RSI and MACD, suitable for training LSTM models to predict stock prices more accurately.
         """.format(train_ratio=train_ratio)
     )
 else:
-    st.error("Không thể tải dữ liệu. Vui lòng kiểm tra mã cổ phiếu hoặc khoảng thời gian.")
+    st.error("Unable to fetch data. Please check the stock symbol or time period.")
